@@ -1,0 +1,402 @@
+'-------------------------ALL WHS FUNCTIONS---------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+Function WorksheetExists(acctName As String) As Boolean
+    Dim ws As Worksheet
+    
+    On Error Resume Next
+    Set ws = ThisWorkbook.Worksheets(acctName)
+    On Error GoTo 0
+    
+    If Not ws Is Nothing Then
+        WorksheetExists = True
+    Else
+        WorksheetExists = False
+    End If
+End Function
+
+Function insertData(exists As Boolean, acctName As String, insertType As String, valueInsert As Integer) As Boolean
+    Dim targetSheet As Worksheet
+    Dim searchRange As Range
+    Dim foundCell As Range
+    Dim emptyCell As Range
+    Dim ws As Worksheet
+    Dim wb As Workbook
+    
+    Set wb = ThisWorkbook
+    Set ws = ThisWorkbook.Sheets("import_data")
+    ws.Activate
+    ws.AutoFilterMode = False
+    
+    If (exists = True) Then
+        Sheets(acctName).Activate
+        Set targetSheet = ThisWorkbook.Sheets(acctName)
+        Set searchRange = targetSheet.UsedRange
+        Set foundCell = searchRange.Find(insertType, LookIn:=xlValues, LookAt:=xlPart) 'LookAt:=xlWhole) used to look for whole cell name
+            If Not foundCell Is Nothing Then
+                Set emptyCell = foundCell.Offset(1).End(xlDown).Offset(1)
+                emptyCell.Value = valueInsert
+            End If
+    'Else
+        'MsgBox "This account does not exist in this work book"
+    End If
+    
+    ws.Activate
+    ws.AutoFilterMode = False
+    
+End Function
+
+Function getInsertType(valueType As String) As String
+        Dim insertType As String
+        
+        If valueType = "countHrsIn" Then
+            insertType = "Hours Inbound"
+        ElseIf valueType = "countHrsOut" Then
+            insertType = "Hours Outbound"
+        ElseIf valueType = "countElWHS" Then
+            insertType = "Hours EL"
+        ElseIf valueType = "countHrsCLR" Then
+            insertType = "CLR Hours"
+        ElseIf valueType = "countNonOps" Then
+            insertType = "Non OPS"
+        ElseIf valueType = "countElCLR" Then
+            insertType = "CLR EL"
+        Else: insertType = "Error"
+        End If
+        
+        getInsertType = insertType
+        
+End Function
+
+Function getAcctName(acctNum As Integer) As String
+        Dim acctName As String
+        
+        If acctNum = 7758 Then
+            acctName = "ALLEN"
+        ElseIf acctNum = 7864 Then
+            acctName = "CALLA"
+        ElseIf acctNum = 4450 Then
+            acctName = "MCR"
+        ElseIf acctNum = 7484 Then
+            acctName = "MOHAWK"
+        ElseIf acctNum = 7979 Then
+            acctName = "SMARTPAK"
+        ElseIf acctNum = 7134 Then
+            acctName = "UMBRELLACO"
+        'WHS 5
+        ElseIf acctNum = 5877 Then
+            acctName = "AM BILT"
+        ElseIf acctNum = 5352 Then
+            acctName = "AM VALVES"
+        ElseIf acctNum = 5643 Then
+            acctName = "JANDUICE"
+        ElseIf acctNum = 5921 Then
+            acctName = "KABC5"
+        ElseIf acctNum = 5126 Then
+            acctName = "UPRENO"
+        ElseIf acctNum = 1018 Then
+            acctName = "NEW COW"
+        ElseIf acctNum = 5140 Then
+            acctName = "NJ PKG"
+        ElseIf acctNum = 5695 Then
+            acctName = "PINECELL"
+        ElseIf acctNum = 5499 Then
+            acctName = "SMILETECH"
+        ElseIf acctNum = 5531 Then
+            acctName = "VICTORIOUS"
+        ElseIf acctNum = 5873 Then
+            acctName = "UNITED DRINKS5"
+        ElseIf acctNum = 8873 Then
+            acctName = "UNITED DRINKS8"
+        'WHS 8
+        ElseIf acctNum = 8722 Then
+            acctName = "DEMO"
+        ElseIf acctNum = 8921 Then
+            acctName = "KABC8"
+        ElseIf acctNum = 8126 Then
+            acctName = "UPRENO"
+        ElseIf acctNum = 8282 Then
+            acctName = "MIXCARE8"
+        ElseIf acctNum = 8365 Then
+            acctName = "SHOESTORE8"
+        ElseIf acctNum = 8134 Then
+            acctName = "UMBRELLACO"
+        'WHS 6
+        ElseIf acctNum = 4725 Then
+            acctName = "LIVECAST"
+        ElseIf acctNum = 6925 Then
+            acctName = "CUDDLESTORE"
+        ElseIf acctNum = 6282 Then
+            acctName = "MIXCARE6"
+        ElseIf acctNum = 6807 Then
+            acctName = "MSCS"
+        ElseIf acctNum = 7257 Then
+            acctName = "BICYCLECITY"
+        ElseIf acctNum = 4365 Then
+            acctName = "SHOESTORE6"
+        ElseIf acctNum = 4777 Then
+            acctName = "FREDS"
+        ElseIf acctNum = 1715 Then
+            acctName = "REMNANT"
+        ElseIf acctNum = 6178 Then
+            acctName = "SWOOC"
+        ElseIf acctNum = 6080 Then
+            acctName = "TOXIC"
+        ElseIf acctNum = 5008 Then
+            acctName = "TOXIC"
+        Else: acctNum = acctNum
+        End If
+        
+        getAcctName = acctName
+        
+End Function
+
+Function getNumHrsIn(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If (acctNum = 1018 Or acctNum = 7758 Or acctNum = 7979 Or acctNum = 6282 Or _
+         acctNum = 8722) And cell.Value = acctNum And (cell.Offset(0, 1).Value Like "*Receipt*" Or cell.Value Like "*Return*") Then
+                    count = count + cell.Offset(0, 2).Value
+        ElseIf cell.Value = acctNum And (cell.Offset(0, 1).Value Like "*Receipt*" Or cell.Offset(0, 1).Value Like "*Receiving*" Or _
+        cell.Offset(0, 1).Value Like "*MLT*") Then
+                count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumHrsIn = count
+    
+End Function
+
+Function getNumHrsOut(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If ((acctNum = 6807) And (cell.Value = acctNum) And (cell.Offset(0, 1).Value Like "Projects" Or cell.Offset(0, 1).Value Like "*Truck Ship*" Or _
+        cell.Offset(0, 1).Value Like "*Janitorial*" Or cell.Offset(0, 1).Value Like "*Regular Pick*" Or cell.Offset(0, 1).Value Like "*Stocking*" Or _
+        cell.Offset(0, 1).Value Like "*Order Checking*")) Then
+            count = count + cell.Offset(0, 2).Value
+        ElseIf (acctNum = 5008 And cell.Value = "Returns") Then
+            count = count + cell.Offset(0, 2).Value
+        ElseIf (cell.Value = acctNum And acctNum <> 6807) And (cell.Offset(0, 1).Value Like "*Checking*" Or cell.Offset(0, 1).Value Like "*Pick*" Or _
+        cell.Offset(0, 1).Value Like "*Ship*" Or cell.Offset(0, 1).Value Like "*Stocking*" Or cell.Offset(0, 1).Value Like "*Other Warehouse*" Or _
+        cell.Offset(0, 1).Value Like "*pulling*" Or cell.Offset(0, 1).Value Like "*Pulling*") Then
+            count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumHrsOut = count
+    
+End Function
+
+Function getNumElWHS(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If ((acctNum = 6807) And (cell.Value = acctNum) And (cell.Offset(0, 1).Value Like "*Request*" Or cell.Offset(0, 1).Value Like "*Special*")) Then
+            count = count + cell.Offset(0, 2).Value
+        ElseIf ((cell.Value = acctNum And acctNum = 5008) And (cell.Value = "Projects" Or cell.Value = "Special Request")) Then
+            count = count + cell.Offset(0, 2).Value
+        ElseIf (cell.Value = acctNum And acctNum <> 5008 And acctNum <> 6807) And (cell.Offset(0, 1).Value Like "*Request*" Or cell.Offset(0, 1).Value Like "*request*" Or _
+        cell.Offset(0, 1).Value Like "*Warehouse Inventory*" Or cell.Offset(0, 1).Value Like "*Projects*" Or cell.Offset(0, 1).Value Like "*Returns*" Or _
+        cell.Offset(0, 1).Value Like "*Special*") Then
+            count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumElWHS = count
+    
+End Function
+
+Function getNumHrsCLR(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If ((acctNum = 6282 Or acctNum = 8282) And (cell.Offset(0, 1).Value Like "*CLERICAL*")) Then
+            count = count + cell.Offset(0, 2).Value
+        ElseIf ((cell.Value = acctNum And (acctNum <> 6282 Or acctNum <> 8282)) And (cell.Offset(0, 1).Value Like "*CLERICAL T*" Or _
+        cell.Offset(0, 1).Value Like "*CLERICAL R*" Or cell.Offset(0, 1).Value Like "*CLERICAL B*")) Then
+            count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumHrsCLR = count
+    
+End Function
+
+Function getNumNonOPS(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If (cell.Value = acctNum And cell.Offset(0, 1).Value Like "*BILLING*") Then
+            count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumNonOPS = count
+    
+End Function
+
+Function getNumElCLR(acctNum As Integer) As Double
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Double
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.Value <> "" Then
+        If ((cell.Value = acctNum And (acctNum <> 6282 Or acctNum <> 8282)) And (cell.Offset(0, 1).Value Like "*CLERICAL EX*" Or _
+        cell.Offset(0, 1).Value Like "*CLERICAL PHY*" Or cell.Offset(0, 1).Value Like "*CLERICAL FF*")) Then
+            count = count + cell.Offset(0, 2).Value
+        End If
+     End If
+'NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumElCLR = count
+    
+End Function
+
+Sub DailyRevHRS()
+    Dim range_a As Range
+    Dim cell As Range
+    Dim acctName As String
+    Dim countHrsIn As Double
+    Dim countHrsOut As Double
+    Dim countElWHS As Double
+    Dim countHrsCLR As Double
+    Dim countNonOps As Double
+    Dim countElCLR As Double
+    
+    'Variables for insertion
+    Dim ws As Worksheet
+    Dim wb As Workbook
+    'Value  to be used for insertion
+    'Dim valueInsert As Integer
+    Dim insertType As String
+    'Check if worksheet exist
+    Dim exists As Boolean
+    
+    'set active work sheet and filter to false
+    'Set wb = ThisWorkbook
+    'Set ws = ThisWorkbook.Sheets("import_data")
+    'ws.Activate
+    'ws.AutoFilterMode = False
+    
+    
+    
+    '----------------------------WHS 7-------------------------
+    '------SMARTPAK 7979------------
+    'Get number of orders, cases with SMARTPAK 7979
+    'Then display that value as a message
+    acctName = getAcctName(7979)
+    'exists = WorksheetExists(acctName)
+    
+    countHrsIn = getNumHrsIn(7979)
+    MsgBox "7979 Inbound Hours are: " & countHrsIn
+    'insertType = getInsertType("countHrsIn")
+    'Call insertData(exists, acctName, insertType, countOrders)
+    
+    countHrsOut = getNumHrsOut(7979)
+    MsgBox "7979 Outbound Hours are: " & countHrsOut
+    
+    countElWHS = getNumElWHS(7979)
+    MsgBox "7979 Extra Labor Hours are: " & countElWHS
+    
+    countHrsCLR = getNumHrsCLR(7979)
+    MsgBox "7979 CLR Hours are: " & countHrsCLR
+    
+    countNonOps = getNumNonOPS(7979)
+    MsgBox "7979 Billing Hours are: " & countNonOps
+    
+    countElCLR = getNumElCLR(7979)
+    MsgBox "7979 CLR EL Hours are: " & countElCLR
+    
+    MsgBox "All Accounts have had their WHS/ CLR hours successfully added!", vbInformation
+End Sub
+

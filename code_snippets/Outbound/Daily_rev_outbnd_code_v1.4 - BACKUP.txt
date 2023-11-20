@@ -1,0 +1,1421 @@
+'-------------------------ALL WHS FUNCTIONS---------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+Function WorksheetExists(acctName As String) As Boolean
+    Dim ws As Worksheet
+    
+    On Error Resume Next
+    Set ws = ThisWorkbook.Worksheets(acctName)
+    On Error GoTo 0
+    
+    If Not ws Is Nothing Then
+        WorksheetExists = True
+    Else
+        WorksheetExists = False
+    End If
+End Function
+
+Function insertData(exists As Boolean, acctName As String, insertType As String, valueInsert As Integer) As Boolean
+    Dim targetSheet As Worksheet
+    Dim searchRange As Range
+    Dim foundCell As Range
+    Dim emptyCell As Range
+    Dim ws As Worksheet
+    Dim wb As Workbook
+    
+    Set wb = ThisWorkbook
+    Set ws = ThisWorkbook.Sheets("import_data")
+    ws.Activate
+    ws.AutoFilterMode = False
+    
+    If (exists = True) Then
+        Sheets(acctName).Activate
+        Set targetSheet = ThisWorkbook.Sheets(acctName)
+        Set searchRange = targetSheet.UsedRange
+        Set foundCell = searchRange.Find(insertType, LookIn:=xlValues, LookAt:=xlPart) 'LookAt:=xlWhole) used to look for whole cell name
+            If Not foundCell Is Nothing Then
+                Set emptyCell = foundCell.Offset(1).End(xlDown).Offset(1)
+                emptyCell.value = valueInsert
+            End If
+    'Else
+        'MsgBox "This account does not exist in this work book"
+    End If
+    
+    ws.Activate
+    ws.AutoFilterMode = False
+    
+End Function
+
+Function getInsertType(valueType As String) As String
+        Dim insertType As String
+        
+        If valueType = "countOrders" Then
+            insertType = "Orders Total"
+        ElseIf valueType = "countLines" Then
+            insertType = "Lines Total"
+        ElseIf valueType = "countEaches" Then 'use this for 5140
+            insertType = "Eaches Total"
+        ElseIf valueType = "countLtlEaches" Then
+            insertType = "LTL Eaches"
+        ElseIf valueType = "countSmEaches" Then
+            insertType = "SM PKG Eaches"
+        ElseIf valueType = "countCrtns" Then
+            insertType = "Cartons Total"
+        ElseIf valueType = "countLtlCrtns" Then
+            insertType = "LTL Cartons"
+        ElseIf valueType = "countSmCrtns" Then
+            insertType = "SM PKG Cartons"
+        ElseIf valueType = "countCases" Then
+            insertType = "Cases Total"
+        ElseIf valueType = "countLtlCases" Then
+            insertType = "LTL Cases"
+        ElseIf valueType = "countSmCases" Then
+            insertType = "SM PKG Cases"
+        ElseIf valueType = "countPairs" Then
+            insertType = "Pairs Total"
+        ElseIf valueType = "countSoles" Then
+            insertType = "Insoles Total"
+        ElseIf valueType = "countPallets" Then
+            insertType = "Pallets Total"
+        ElseIf valueType = "countSmOrders" Then
+            insertType = "SM PKG Orders"
+        ElseIf valueType = "countRolls" Then
+            insertType = "Rolls Total"
+        Else: insertType = "Error"
+        End If
+        
+        getInsertType = insertType
+        
+End Function
+
+Function getAcctName(acctNum As Integer) As String
+        Dim acctName As String
+        
+        If acctNum = 7758 Then
+            acctName = "ALLEN"
+        ElseIf acctNum = 7864 Then
+            acctName = "CALLA"
+        ElseIf acctNum = 4450 Then
+            acctName = "MCR"
+        ElseIf acctNum = 7484 Then
+            acctName = "MOHAWK"
+        ElseIf acctNum = 7979 Then
+            acctName = "SMARTPAK"
+        ElseIf acctNum = 7134 Then
+            acctName = "UMBRELLACO"
+        'WHS 5
+        ElseIf acctNum = 5877 Then
+            acctName = "AM BILT"
+        ElseIf acctNum = 5352 Then
+            acctName = "AM VALVE"
+        ElseIf acctNum = 5643 Then
+            acctName = "JAUNDICE"
+        ElseIf acctNum = 5921 Then
+            acctName = "KABC5"
+        ElseIf acctNum = 5126 Then
+            acctName = "UPRENO"
+        ElseIf acctNum = 1018 Then
+            acctName = "NEW COW"
+        ElseIf acctNum = 5140 Then
+            acctName = "NJ PKG"
+        ElseIf acctNum = 5695 Then
+            acctName = "PINECELL"
+        ElseIf acctNum = 5499 Then
+            acctName = "SMILETECH"
+        ElseIf acctNum = 5531 Then
+            acctName = "VICTORIOUS"
+        ElseIf acctNum = 5873 Then
+            acctName = "UNITED DRINKS5"
+        ElseIf acctNum = 8873 Then
+            acctName = "UNITED DRINKS8"
+        'WHS 8
+        ElseIf acctNum = 8722 Then
+            acctName = "DEMO"
+        ElseIf acctNum = 8921 Then
+            acctName = "KABC8"
+        ElseIf acctNum = 8126 Then
+            acctName = "UPRENO"
+        ElseIf acctNum = 8282 Then
+            acctName = "MIXWARE8"
+        ElseIf acctNum = 8365 Then
+            acctName = "SHOESTORE8"
+        ElseIf acctNum = 8134 Then
+            acctName = "UMBRELLACO"
+        'WHS 6
+        ElseIf acctNum = 4725 Then
+            acctName = "LIVECAST"
+        ElseIf acctNum = 6925 Then
+            acctName = "CUDDLESTORE"
+        ElseIf acctNum = 6282 Then
+            acctName = "MIXWARE6"
+        ElseIf acctNum = 6807 Then
+            acctName = "MSCS"
+        ElseIf acctNum = 7257 Then
+            acctName = "BICYCLECITY"
+        ElseIf acctNum = 4365 Then
+            acctName = "SHOESTORE6"
+        ElseIf acctNum = 4777 Then
+            acctName = "FREDS"
+        ElseIf acctNum = 1715 Then
+            acctName = "REMNANT"
+        ElseIf acctNum = 6178 Then
+            acctName = "SWOOC"
+        ElseIf acctNum = 6080 Then
+            acctName = "TOXIC"
+        ElseIf acctNum = 5008 Then
+            acctName = "TOXIC"
+        Else: acctNum = acctNum
+        End If
+        
+        getAcctName = acctName
+        
+End Function
+
+Function getNumOrders(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + 1
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumOrders = count
+    
+End Function
+
+Function getNumSmOrders(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If (cell.value = acctNum And cell.Offset(0, 19).value = 0) Then
+            count = count + 1
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmOrders = count
+    
+End Function
+
+
+Function getNumEaches(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (acctNum = 5140) Then
+            count = count + cell.Offset(0, 26).value
+         Else
+            count = count + cell.Offset(0, 17).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumEaches = count
+    
+End Function
+
+Function getNumLtlEa(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      (cell.Offset(0, 19).value < 1 And cell.Offset(0, 17) <= 100) Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 17).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLtlEa = count
+    
+End Function
+
+Function getNumSmEa(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      cell.Offset(0, 19).value > 0 Or cell.Offset(0, 17) > 100 Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 20).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmEa = count
+    
+End Function
+
+Function getNumPallets(acctNum As Integer) As Integer
+
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (acctNum = 5643) Then
+            count = count + cell.Offset(0, 27).value
+         'ElseIf (acctNum = 1018 And cell.Offset(0, 19).Value = 0) Then
+            'count = count + 1
+         Else
+            count = count + cell.Offset(0, 19).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+    
+' Return the final count
+    getNumPallets = count
+    
+End Function
+
+Function getNumCrtns(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 20).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 20).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumCrtns = count
+    
+End Function
+
+Function getNumLtlCrtns(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      (cell.Offset(0, 19).value < 1 And cell.Offset(0, 17) <= 25) Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 20).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLtlCrtns = count
+    
+End Function
+
+Function getNumSmCrtns(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      cell.Offset(0, 19).value > 0 Or cell.Offset(0, 17) > 25 Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 20).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmCrtns = count
+    
+End Function
+
+Function getNumLines(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 21).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLines = count
+    
+End Function
+'-------------------------WHS 5 FUNCTIONS---------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+Function getNumCasesWHS5(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 24).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 24).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumCasesWHS5 = count
+    
+End Function
+
+Function getNumLtlCasesWHS5(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      (cell.Offset(0, 19).value < 1 And cell.Offset(0, 24) <= 25) Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 24).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLtlCasesWHS5 = count
+    
+End Function
+
+Function getNumSmCasesWHS5(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      cell.Offset(0, 19).value > 0 Or cell.Offset(0, 24) > 25 Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 24).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 24).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmCasesWHS5 = count
+    
+End Function
+
+Function getNumRollsWHS5(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 29).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumRollsWHS5 = count
+    
+End Function
+
+
+'-------------------------WHS 6 & 8 FUNCTIONS---------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+Function getNumCasesWHS68(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 23).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 23).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumCasesWHS68 = count
+    
+End Function
+
+Function getNumLtlCasesWHS68(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      (cell.Offset(0, 19).value < 1 And cell.Offset(0, 23) <= 25) Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 23).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLtlCasesWHS68 = count
+    
+End Function
+
+Function getNumSmCasesWHS68(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      cell.Offset(0, 19).value > 0 Or cell.Offset(0, 23) > 25 Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 23).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 23).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmCasesWHS68 = count
+    
+End Function
+
+Function getNumPairsWHS68(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (acctNum = 8365) Then
+            count = count + cell.Offset(0, 28).value
+         Else
+            count = count + cell.Offset(0, 27).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumPairsWHS68 = count
+    
+End Function
+
+Function getNumSolesWHS68(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (acctNum = 8365) Then
+            count = count + cell.Offset(0, 26).value
+         Else
+            count = count + cell.Offset(0, 25).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSolesWHS68 = count
+    
+End Function
+
+
+
+'-------------------------WHS 7 FUNCTIONS---------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+'-------------------------------------------------------------------
+
+Function getNumCasesWHS7(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 26).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 26).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumCasesWHS7 = count
+    
+End Function
+
+Function getNumLtlCasesWHS7(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      (cell.Offset(0, 19).value < 1 And cell.Offset(0, 17) <= 25) Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+            count = count + cell.Offset(0, 26).value
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumLtlCasesWHS7 = count
+    
+End Function
+
+Function getNumSmCasesWHS7(acctNum As Integer) As Integer
+    Dim rng As Range
+    Dim cell As Range
+    Dim count As Integer
+    
+    
+    ' Initialize counter and rng (range of cells)
+    Set rng = Range("A1:A10000")
+    count = 0
+    
+
+    ' Loop through each cell in the specified range
+    ' Check if the cell value is equal to the target number
+    ' Increment the count if the account number is found
+    For Each cell In rng
+     If cell.value <> "" Then
+      If cell.Offset(0, 3).value = "INHS" Or cell.Offset(0, 4).value Like "[*]M*" Or _
+      cell.Offset(0, 19).value > 0 Or cell.Offset(0, 17) > 25 Then
+        GoTo NextIteration
+      Else
+        If cell.value = acctNum Then
+         If (cell.Offset(0, 26).value = 0) Then
+            count = count + 1
+         Else
+            count = count + cell.Offset(0, 26).value
+         End If
+        End If
+      End If
+     End If
+NextIteration:
+    Next cell
+
+    ' Return the final count
+    getNumSmCasesWHS7 = count
+    
+End Function
+
+
+
+'----------------------------------Actual code begins here!---------------------
+
+Sub DailyRevOutbound()
+    'Variables to hold acct data
+    Dim countOrders As Integer
+    Dim countLines As Integer
+    Dim countEaches As Integer
+    Dim countLtlEaches As Integer
+    Dim countSmEaches As Integer
+    Dim countCrtns As Integer
+    Dim countLtlCrtns As Integer
+    Dim countSmCrtns As Integer
+    Dim countCases As Integer
+    Dim countLtlCases As Integer
+    Dim countSmCases As Integer
+    Dim countPairs As Integer
+    Dim countSoles As Integer
+    Dim countPallets As Integer
+    Dim countSmOrders As Integer
+    Dim countRolls As Integer
+    Dim acctName As String
+    
+    'Variables for insertion
+    Dim ws As Worksheet
+    Dim wb As Workbook
+    'Value  to be used for insertion
+    'Dim valueInsert As Integer
+    Dim insertType As String
+    'Check if worksheet exist
+    Dim exists As Boolean
+    
+    'set active work sheet and filter to false
+    Set wb = ThisWorkbook
+    Set ws = ThisWorkbook.Sheets("import_data")
+    ws.Activate
+    ws.AutoFilterMode = False
+    
+    
+    
+    '----------------------------WHS 5-------------------------
+    '------AM VALVE 5352------------
+    'Get number of orders, cases with AM VALVE 5352
+    'Then display that value as a message
+    acctName = getAcctName(5352)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5352)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCases = getNumCasesWHS5(5352)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    
+    '------JAUNDICE 5643------------
+    'Get number of orders, Pallets, cases with JAUNDICE 5643
+    'Then display that value as a message
+    acctName = getAcctName(5643)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5643)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countPallets = getNumPallets(5643)
+    insertType = getInsertType("countPallets")
+    Call insertData(exists, acctName, insertType, countPallets)
+    
+    countCases = getNumCasesWHS5(5643)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    '---------------KABC 5921------------
+    'Get number of orders, lines, eaches, crtns with KABC 5921
+    'Then display that value as a message
+    acctName = getAcctName(5921)
+    exists = WorksheetExists(acctName)
+    If exists = False Then
+        GoTo WHS6Start
+    Else:
+        countOrders = getNumOrders(5921)
+        insertType = getInsertType("countOrders")
+        Call insertData(exists, acctName, insertType, countOrders)
+        
+        countLines = getNumLines(5921)
+        insertType = getInsertType("countLines")
+        Call insertData(exists, acctName, insertType, countLines)
+        
+        countCrtns = getNumCrtns(5921)
+        insertType = getInsertType("countCrtns")
+        Call insertData(exists, acctName, insertType, countCrtns)
+        
+        countEaches = getNumEaches(5921)
+        insertType = getInsertType("countEaches")
+        Call insertData(exists, acctName, insertType, countEaches)
+    End If
+    
+    '------NEW COW 1018------------
+    'Get number of orders, cases with NEW COW 1018
+    'Then display that value as a message
+    acctName = getAcctName(1018)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(1018)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countSmOrders = getNumSmOrders(1018)
+    insertType = getInsertType("countSmOrders")
+    Call insertData(exists, acctName, insertType, countSmOrders)
+    
+    '------NJ PKG 5140------------
+    'Get number of orders, Pallets, eaches with NJ PKG 5140
+    'Then display that value as a message
+    acctName = getAcctName(5140)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5140)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countPallets = getNumPallets(5140)
+    insertType = getInsertType("countPallets")
+    Call insertData(exists, acctName, insertType, countPallets)
+    
+    countEaches = getNumEaches(5140)
+    insertType = getInsertType("countEaches")
+    Call insertData(exists, acctName, insertType, countEaches)
+    
+    '------PINECELL 5695------------
+    'Get number of orders, cases with PINECELL 5695
+    'Then display that value as a message
+    acctName = getAcctName(5695)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5695)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCases = getNumCasesWHS5(5695)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    '------SMILETECH 5499------------
+    'Get number of orders, cases with SMILETECH 5499
+    'Then display that value as a message
+    acctName = getAcctName(5499)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5499)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countRolls = getNumRollsWHS5(5499)
+    insertType = getInsertType("countRolls")
+    Call insertData(exists, acctName, insertType, countRolls)
+    
+    '------VICTORIOUS 5531------------
+    'Get number of orders, cases with VICTORIOUS 5531
+    'Then display that value as a message
+    acctName = getAcctName(5531)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(5531)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCases = getNumCasesWHS5(5531)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+
+    
+    '----------------------------WHS 6-------------------------
+    '------LIVECAST 4725------------
+    'Get number of orders, cases, sm pkg cases with 4725 LIVECAST
+    'Then display that value as a message
+WHS6Start:
+    acctName = getAcctName(4725)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(4725)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCases = getNumCasesWHS68(4725)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    countSmCases = getNumSmCasesWHS68(4725)
+    insertType = getInsertType("countSmCases")
+    Call insertData(exists, acctName, insertType, countSmCases)
+    
+    '------------6282 MIXWARE--------------
+    'Get number of orders, eaches with 6282 MIXWARE
+    'Then display that value as a message
+    acctName = getAcctName(6282)
+    exists = WorksheetExists(acctName)
+    If exists = False Then
+        GoTo WHS7Start
+    Else:
+        countOrders = getNumOrders(6282)
+        insertType = getInsertType("countOrders")
+        Call insertData(exists, acctName, insertType, countOrders)
+        
+        
+        countEaches = getNumEaches(6282)
+        insertType = getInsertType("countEaches")
+        Call insertData(exists, acctName, insertType, countEaches)
+    End If
+    
+    '------------6807 MSCS--------------
+    'Get number of orders, eaches with 6807 MSCS
+    'Then display that value as a message
+    acctName = getAcctName(6807)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(6807)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    
+    countEaches = getNumEaches(6807)
+    insertType = getInsertType("countEaches")
+    Call insertData(exists, acctName, insertType, countEaches)
+    
+    '------------7257 BICYCLECITY--------------
+    'Get number of orders, cases, SM PKG crtns with 7257 BICYCLECITY
+    'Then display that value as a message
+    acctName = getAcctName(7257)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(7257)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    
+    countCases = getNumCasesWHS68(7257)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    countSmCrtns = getNumSmCrtns(7257)
+    insertType = getInsertType("countSmCrtns")
+    Call insertData(exists, acctName, insertType, countSmCrtns)
+    
+    '---------------SHOESTORE 4365------------
+    'Get number of orders, pairs, soles with SHOESTORE 4365
+    'Then display that value as a message
+    acctName = getAcctName(4365)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(4365)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countSoles = getNumSolesWHS68(4365)
+    insertType = getInsertType("countSoles")
+    Call insertData(exists, acctName, insertType, countSoles)
+    
+    countPairs = getNumPairsWHS68(4365)
+    countPairs = countPairs - countSoles
+    insertType = getInsertType("countPairs")
+    Call insertData(exists, acctName, insertType, countPairs)
+    
+    
+    '--------------------WHS 7----------------------------
+    '------------Allen----------
+    'Get number of orders, LTL crtns, SM PKG Crtns with 7758 Allen
+    'Then display that value as a message
+WHS7Start:
+    acctName = getAcctName(7758)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(7758)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countLtlCrtns = getNumLtlCrtns(7758)
+    insertType = getInsertType("countLtlCrtns")
+    Call insertData(exists, acctName, insertType, countLtlCrtns)
+    
+    countSmCrtns = getNumSmCrtns(7758)
+    insertType = getInsertType("countSmCrtns")
+    Call insertData(exists, acctName, insertType, countSmCrtns)
+    
+    '------------Calla----------
+    'Get number of orders, LTL eaches, SM PKG eaches with 7864 calla
+    'Then display that value as a message
+    acctName = getAcctName(7864)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(7864)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countLtlEaches = getNumLtlEa(7864)
+    insertType = getInsertType("countLtlEaches")
+    Call insertData(exists, acctName, insertType, countLtlEaches)
+    
+    countSmEaches = getNumSmEa(7864)
+    insertType = getInsertType("countSmEaches")
+    Call insertData(exists, acctName, insertType, countSmEaches)
+    
+    
+    '------------MCR----------
+    'Get number of orders, crtns with MCR 4450
+    'Then display that value as a message
+    acctName = getAcctName(4450)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(4450)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+
+    countCrtns = getNumCrtns(4450)
+    insertType = getInsertType("countCrtns")
+    Call insertData(exists, acctName, insertType, countCrtns)
+    
+    '------------Mohawk 7484----------
+    'Get number of orders, cases with Mohawk 7484
+    'Then display that value as a message
+    acctName = getAcctName(7484)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(7484)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCases = getNumCasesWHS7(7484)
+    insertType = getInsertType("countCases")
+    Call insertData(exists, acctName, insertType, countCases)
+    
+    '-------------Smartpak----------
+    'Get number of orders, lines, eaches with 7979 Smartpak
+    'Insert Orders, lines, eaches
+    'Then display that value as a message
+    acctName = getAcctName(7979)
+    exists = WorksheetExists(acctName)
+    
+    countOrders = getNumOrders(7979)
+    'MsgBox "The Number of Orders for 7979 is: " & countOrders
+    insertType = getInsertType("countOrders")
+    'MsgBox "The type of this value to be inserted is: " & insertType
+    Call insertData(exists, acctName, insertType, countOrders)
+
+    countLines = getNumLines(7979)
+    'MsgBox "The Number of Lines for 7979 is: " & countLines
+    insertType = getInsertType("countLines")
+    'MsgBox "The type of this value to be inserted is: " & insertType
+    Call insertData(exists, acctName, insertType, countLines)
+
+    countEaches = getNumEaches(7979)
+    'MsgBox "The Number of Eaches for 7979 is: " & countEaches
+    insertType = getInsertType("countEaches")
+    'MsgBox "The type of this value to be inserted is: " & insertType
+    Call insertData(exists, acctName, insertType, countEaches)
+    
+    '-------------SWOOC 6178----------
+    'Get number of orders, lines, eaches with SWOOC 6178
+    'Insert Orders, lines, eaches
+    'Then display that value as a message
+    acctName = getAcctName(6178)
+    exists = WorksheetExists(acctName)
+    
+    countOrders = getNumOrders(6178)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+
+    countLtlEaches = getNumLtlEa(6178)
+    insertType = getInsertType("countLtlEaches")
+    Call insertData(exists, acctName, insertType, countLtlEaches)
+
+    countSmEaches = getNumSmEa(6178)
+    insertType = getInsertType("countSmEaches")
+    Call insertData(exists, acctName, insertType, countSmEaches)
+    
+    
+    '---------------------WHS 8---------------------------------------------
+    '-------------DEMO 8722---------------
+    'Get number of orders, crtns with DEMO 8722
+    'Then display that value as a message
+    acctName = getAcctName(8722)
+    exists = WorksheetExists(acctName)
+    countOrders = getNumOrders(8722)
+    insertType = getInsertType("countOrders")
+    Call insertData(exists, acctName, insertType, countOrders)
+    
+    countCrtns = getNumCrtns(8722)
+    insertType = getInsertType("countCrtns")
+    Call insertData(exists, acctName, insertType, countCrtns)
+    
+    '---------------KABC 8921------------
+    'Get number of orders, lines, eaches, crtns with KABC 8921
+    'Then display that value as a message
+        acctName = getAcctName(8921)
+        exists = WorksheetExists(acctName)
+    If exists = False Then
+        GoTo WHSComplete
+    Else:
+        countOrders = getNumOrders(8921)
+        insertType = getInsertType("countOrders")
+        Call insertData(exists, acctName, insertType, countOrders)
+        
+        countLines = getNumLines(8921)
+        insertType = getInsertType("countLines")
+        Call insertData(exists, acctName, insertType, countLines)
+        
+        countCrtns = getNumCrtns(8921)
+        insertType = getInsertType("countCrtns")
+        Call insertData(exists, acctName, insertType, countCrtns)
+        
+        countEaches = getNumEaches(8921)
+        insertType = getInsertType("countEaches")
+        Call insertData(exists, acctName, insertType, countEaches)
+    End If
+    
+    '---------------MIXWARE 8282------------
+    'Get number of orders, eaches with MIXWARE 8282
+    'Then display that value as a message
+    acctName = getAcctName(6282)
+    exists = WorksheetExists(acctName)
+
+        acctName = getAcctName(8282)
+        exists = WorksheetExists(acctName)
+        countOrders = getNumOrders(8282)
+        insertType = getInsertType("countOrders")
+        Call insertData(exists, acctName, insertType, countOrders)
+        
+        countEaches = getNumEaches(8282)
+        insertType = getInsertType("countEaches")
+        Call insertData(exists, acctName, insertType, countEaches)
+    
+    '---------------SHOESTORE 8365------------
+    'Get number of orders, pairs, soles with SHOESTORE 8365
+    'Then display that value as a message
+    acctName = getAcctName(4365)
+    exists = WorksheetExists(acctName)
+    If exists = True Then
+        GoTo WHSComplete
+    Else:
+        acctName = getAcctName(8365)
+        exists = WorksheetExists(acctName)
+        countOrders = getNumOrders(8365)
+        insertType = getInsertType("countOrders")
+        Call insertData(exists, acctName, insertType, countOrders)
+        
+        countSoles = getNumSolesWHS68(8365)
+        insertType = getInsertType("countCrtns")
+        Call insertData(exists, acctName, insertType, countSoles)
+        
+        countPairs = getNumPairsWHS68(8365)
+        countPairs = countPairs - countSoles
+        insertType = getInsertType("countPairs")
+        Call insertData(exists, acctName, insertType, countPairs)
+    End If
+    
+WHSComplete:
+    MsgBox "WHS Outbound Data insertion complete"
+    
+
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
