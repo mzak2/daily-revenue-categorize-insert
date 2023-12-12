@@ -11,13 +11,17 @@ daily from actual workers at this company.
 
 1. import_data: represents the number of hours that the Warehouse and CLR (Customer liason representative) worked on their respective accounts
 2. import_data_1: represents the number of orders shipped, by account, the type of information like Eaches, Lines, Cases, or Pallets. To be used for Operational Analysis and efficiency.
-
+<br><br>
+Spreadsheet without any data inserted
 ![alt text](https://github.com/mzak2/daily-revenue-categorize-insert/blob/main/blank_rev.PNG)
-
+<br><br>
+Data inserted for Outbound (import_data_1)
 ![alt text](https://github.com/mzak2/daily-revenue-categorize-insert/blob/main/outbound_inserted.PNG)
-
+<br><br>
+Data inserted for Labor Hours (import_data)
 ![alt text](https://github.com/mzak2/daily-revenue-categorize-insert/blob/main/hours_inserted.PNG)
-
+<br><br>
+Run Macros buttons
 ![alt text](https://github.com/mzak2/daily-revenue-categorize-insert/blob/main/macros_to_run.PNG)
 
 
